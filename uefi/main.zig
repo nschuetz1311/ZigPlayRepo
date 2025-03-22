@@ -8,8 +8,13 @@ pub fn main() uefi.Status {
     // conout is an optional so therfore we have to make sure that the null case is handled properly
     const conout = sys_table.con_out orelse return uefi.Status.load_error;
 
-    // _ = is done to ignore the return value as Zig does not accept untreated return values
-    _ = conout.clearScreen();
+    var Status = uefi.Status.success;
+
+    Status = conout.clearScreen();
+    if (Status != uefi.Status.success) {
+        return Status;
+    }
+    // _ = is used to ignore the return value as Zig does not accept untreated return values
     _ = conout.outputString(utf16("Hello World ! \n"));
 
     return uefi.Status.success;
